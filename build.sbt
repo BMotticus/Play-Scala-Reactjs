@@ -13,7 +13,7 @@ scalaVersion := "2.11.7"
 offline := true
 
 libraryDependencies ++= Seq(
-  jdbc,
+  //jdbc,
   cache,
   ws,
   "org.typelevel"              %% "cats" % "0.6.1",

@@ -12,7 +12,7 @@ import play.api.Play.current
 trait ReactEngine {self: Controller =>
   import ReactEngineOps._
 
-  def render (view: String, title: String)(props: (String,Json.JsValueWrapper)*): Html = {
+  def render (view: String, title: String)(props: (String,Json.JsValueWrapper)*)(implicit r: RequestHeader): Html = {
     scriptEngine.load("public/javascripts/app.js")
     scriptEngine.load("public/javascripts/components.js")
     scriptEngine.load(s"public/javascripts/views/$view.js")
@@ -58,7 +58,7 @@ object ReactEngineOps {
   implicit class ScriptEngineOps (engine: javax.script.ScriptEngine) {
     
     def load (script: String) = { 
-      val code = scala.io.Source.fromInputStream(play.api.Environment.simple().resourceAsStream(script).get).mkString
+      val code = scala.io.Source.fromInputStream(play.api.Play.application.resourceAsStream(script).get).mkString
 
       val _ = engine.put("code", code)
       val x = engine.eval(s"load({name: '${script.replace("\\/", "")}', script: code});")

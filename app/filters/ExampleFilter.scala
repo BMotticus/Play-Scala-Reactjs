@@ -40,11 +40,11 @@ class ExampleFilter @Inject()(
   * Here is the above filter example rewritten as an [[EssentialFilter]]:
   * [[ExampleEssentialFilter]] class.
   *
-  * @param exec [[ExecutionContext]]This class is needed to execute code asynchronously.
+  * @param ex [[ExecutionContext]]This class is needed to execute code asynchronously.
   * It is used below by the `map` method.
   */
 @Singleton
-class ExampleEssentialFilter @Inject()(exec: ExecutionContext) extends EssentialFilter {
+class ExampleEssentialFilter @Inject()(implicit ex: ExecutionContext) extends EssentialFilter {
   def apply(nextFilter: EssentialAction) = new EssentialAction {
     def apply(requestHeader: RequestHeader): Accumulator[ByteString, Result] = {
       val accumulator = nextFilter(requestHeader)
