@@ -13,14 +13,14 @@ trait ReactEngine {self: Controller =>
   import ReactEngineOps._
 
   def render (view: String, title: String)(props: (String,Json.JsValueWrapper)*): Html = {
-    jsEngine.loadScript("public/javascripts/app.js")
-    jsEngine.loadScript("public/javascripts/components.js")
-    jsEngine.loadScript(s"public/javascripts/views/$view.js")
-
+    scriptEngine.load("public/javascripts/app.js")
+    scriptEngine.load("public/javascripts/components.js")
+    scriptEngine.load(s"public/javascripts/views/$view.js")
+    
 
 
     val data = Json.obj(props:_*)
-    val rendered = jsEngine.eval("React.renderToString(React.createElement(View, " + Json.stringify(data) + "));").asInstanceOf[String]
+    val rendered = scriptEngine.eval("React.renderToString(React.createElement(View, " + Json.stringify(data) + "));").asInstanceOf[String]
 
     views.html.react.main(title, view, rendered, props = data)
   }
@@ -31,41 +31,34 @@ object ReactEngineOps {
   /**
     * the script engine with poly-fill configurations and the required libraries loaded automatically 
     */
-  lazy val  jsEngine = {
+  lazy val  scriptEngine = {
     val engine = new javax.script.ScriptEngineManager(null).getEngineByName("nashorn")
-
-    val polyfill = engine.eval("""
-    var global = this; 
-    var window = global; 
-    window.matchMedia = function (qs) {
-      return {
-        matches: qs !== '(max-width: 700px)', 
-        addListener: function (mq) {}
-      }
-    }; 
-    var console = {};
-    console.debug = print;
-    console.warn = print;
-    console.log = print; 
-                               """)
-
+    
+    //required polyfill
+    val _ = engine.eval("""
+      var global = this; 
+      var window = global; 
+      var console = {error: print, log: print, warn: print}; 
+      """)
+    
     List(
       "public/lib/lodash/lodash.min.js",
       "public/lib/react/react.js",
       "public/javascripts/app.js",
       "public/javascripts/components.js"
-    ).foreach (engine.loadScript)
+    ).foreach (engine.load)
 
     engine
   }
 
   /**
-    * Pimp for loading files  
+    * Using the `Pimp my library` pattern for loading scripts  
     * @param engine
     */
   implicit class ScriptEngineOps (engine: javax.script.ScriptEngine) {
-    def loadScript (script: String) = {      // Replace ` Play.application ` with ` Environment.simple() `
-      val code = scala.io.Source.fromInputStream(play.api.Play.application.resourceAsStream(script).get).mkString
+    
+    def load (script: String) = { 
+      val code = scala.io.Source.fromInputStream(play.api.Environment.simple().resourceAsStream(script).get).mkString
 
       val _ = engine.put("code", code)
       val x = engine.eval(s"load({name: '${script.replace("\\/", "")}', script: code});")

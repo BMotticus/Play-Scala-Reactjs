@@ -6,4 +6,46 @@ target
 /.project
 /.settings
 /RUNNING_PID
+*.DS_Store
+project/project/
+project/target
+tmp
+.history
+dist
+/*.iml
+/out
+.DS_Store
+
+### All the following .gitignore settings were found at  ###
+### https://github.com/github/gitignore/blob/master/Scala.gitignore  ###
+
+*.class
+*.log
+
+# sbt specific 
+*activator*
+.cache
+.lib/
+dist/*
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Ignore Play! working directory #
+bin/
+/db
+.eclipse
+/lib/
+/modules
+/project/project
+/project/target
+/target
+tmp/
+test-result
+server.pid
+*.iml
+*.eml
+/dist/
+### do not ignore application.conf-template ###
 conf/application.conf
