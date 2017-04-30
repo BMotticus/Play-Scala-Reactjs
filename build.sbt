@@ -2,7 +2,7 @@ import sbt._
 import sbt.Keys._
 import PlayKeys._
 
-name := """bm-play-scala-reactjs"""
+name := """play-reactjs"""
 
 version := "1.0-SNAPSHOT"
 
