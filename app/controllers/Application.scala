@@ -12,7 +12,8 @@ import play.api.libs.json._
 @Singleton
 class Application @Inject() (implicit exec: ExecutionContext) extends Controller with ReactEngine {
   //val stringF = implicitly[Format[String]]
-  def index = Action {implicit r => 
+
+  def index = Action {implicit r =>
     Ok {
       render("home", "Home Page")(
         "message" -> "Hello from the Server"

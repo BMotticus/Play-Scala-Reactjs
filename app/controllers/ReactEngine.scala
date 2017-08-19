@@ -13,10 +13,10 @@ trait ReactEngine {self: Controller =>
   import ReactEngineOps._
 
   def render (view: String, title: String)(props: (String,Json.JsValueWrapper)*)(implicit r: RequestHeader): Html = {
-    scriptEngine.load("public/javascripts/app.js")
-    scriptEngine.load("public/javascripts/components.js")
-    scriptEngine.load(s"public/javascripts/views/$view.js")
-    
+    scriptEngine.load("public/javascripts/components/app.js")
+    scriptEngine.load("public/javascripts/components/components.js")
+    scriptEngine.load(s"public/javascripts/pages/$view.js")
+
 
 
     val data = Json.obj(props:_*)
@@ -29,35 +29,35 @@ trait ReactEngine {self: Controller =>
 object ReactEngineOps {
 
   /**
-    * the script engine with poly-fill configurations and the required libraries loaded automatically 
+    * the script engine with poly-fill configurations and the required libraries loaded automatically
     */
   lazy val  scriptEngine = {
     val engine = new javax.script.ScriptEngineManager(null).getEngineByName("nashorn")
-    
+
     //required polyfill
     val _ = engine.eval("""
-      var global = this; 
-      var window = global; 
-      var console = {error: print, log: print, warn: print}; 
+      var global = this;
+      var window = global;
+      var console = {error: print, log: print, warn: print};
       """)
-    
+
     List(
       "public/lib/lodash/lodash.min.js",
       "public/lib/react/react.js",
-      "public/javascripts/app.js",
-      "public/javascripts/components.js"
+      "public/javascripts/components/app.js",
+      "public/javascripts/components/components.js"
     ).foreach (engine.load)
 
     engine
   }
 
   /**
-    * Using the `Pimp my library` pattern for loading scripts  
+    * Using the `Pimp my library` pattern for loading scripts
     * @param engine
     */
   implicit class ScriptEngineOps (engine: javax.script.ScriptEngine) {
-    
-    def load (script: String) = { 
+
+    def load (script: String) = {
       val code = scala.io.Source.fromInputStream(play.api.Play.application.resourceAsStream(script).get).mkString
 
       val _ = engine.put("code", code)

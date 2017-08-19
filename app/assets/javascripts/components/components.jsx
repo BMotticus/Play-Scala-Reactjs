@@ -10,7 +10,7 @@ class components extends React.Component {
   }
 }
 
-class Page extends React.Component {
+class View extends React.Component {
   constructor(props) {
     super(props);
   }

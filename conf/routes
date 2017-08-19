@@ -8,11 +8,3 @@ GET         /                                  @controllers.Application.index
 GET             /versioned/*file     @controllers.Assets.versioned(path="/public", file: Asset)
 GET             /webjars/*file       @controllers.WebJarAssets.at(file)
 GET             /assets/*file        @controllers.Assets.at(path="/public", file)
-
-
-# An example controller showing a sample home page
-GET     /HomeController                       controllers.HomeController.index
-# An example controller showing how to use dependency injection
-GET     /CountController                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET     /MessageController                    controllers.AsyncController.message

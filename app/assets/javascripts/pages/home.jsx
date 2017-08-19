@@ -1,7 +1,7 @@
 "use strict";
 
 
-class View extends React.Component {
+class Page extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -9,9 +9,9 @@ class View extends React.Component {
   render() {
     return (
       <App>
-        <h1>Hello World</h1>
-        
-      </App> 
+        <h1>{this.props.message}</h1>
+
+      </App>
     );
   }
 }
